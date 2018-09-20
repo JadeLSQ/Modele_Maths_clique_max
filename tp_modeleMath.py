@@ -20,7 +20,7 @@ def ajoutArt(matrice, x, y):
 
 def sommetMaxDegre(myMatrice):
     maxDegre = 0
-    sommetMaxDgr = 1
+    sommetMaxDgr = 0
     for i in range(len(myMatrice[0])):
         if sum(myMatrice[i]) > maxDegre:
             maxDegre = sum(myMatrice[i])
@@ -98,3 +98,62 @@ aInit2 = voisin(K,G)
 print("\nAvec l'amélioration,les cliques maximales sont  : ")
 maxClique2(G,kInit2,cInit2,aInit2)
 
+
+def degre(x,myMatrice):
+    return sum(myMatrice[x])
+
+'''je stock les sommets blanc de G dans une liste'''
+'''Liste = [[numSommet,numCouleur]]'''
+'''Et je le range par ordre de dégrés décroissants'''
+
+def initG(matrice):
+    '''stock les sommets blanc'''
+    l = []
+    for i in range(len(matrice)) :
+        l.append(i)
+    '''Créer un liste qui stock le dregre de sommet, et le ranger en décroissant'''
+    tmp = []
+    for j in range(len(l)):
+        tmp.append((degre(l[j], matrice), l[j]))
+    tmp.sort(reverse=True)
+    '''mise à jour la liste finale avec la liste de degre'''
+    for k in range(len(tmp)):
+        l[k] = tmp[k][1]
+    return l
+
+print ("\nOn range les sommet dans l'ordre décroissant")
+L = initG(G)
+
+'''Pour simplifier, je vois une couleur commeun nombre : 1,2,3,4...'''
+
+def adjacent(l,x,G):
+    adj=False
+    for i in range(len(l)) :
+        if G[l[i]][x]==1:
+            adj=True
+    return adj
+
+def colorier(G):
+    l = initG(G)
+    carteColeur = []
+    i=0
+    taille = len(l)
+    while l!= []:
+        couleur = []
+        couleur.append(l[0])
+        l.remove(l[0])
+        j=0
+
+        while l!=[] and j<len(l):
+            if not adjacent(couleur,l[j],G) :
+                couleur.append(l[j])
+                l.remove(l[j])
+                j-=1
+            j+=1
+        carteColeur.append(couleur)
+    return carteColeur
+
+
+print ("\nOn colorie le graphe G :")
+carteCouleur = colorier(G)
+print (carteCouleur)
